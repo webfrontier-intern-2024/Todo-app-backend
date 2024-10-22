@@ -1,0 +1,56 @@
+body {
+    background-color: rgba(67, 168, 239, 0.384);
+}
+
+h1 {
+    text-align: center;
+}
+
+.todo-form {
+    height: 40px;
+    text-align: center;
+}
+
+.todo-form input {
+    height: 50px;
+    border-radius: 10px;
+    outline: none;
+    margin-right: 10px; /* ボタンとの間隔を設定 */
+    flex: 1; /* 入力フィールドが残りのスペースを埋める */
+}
+
+.todo-list {
+    text-align: center;
+    list-style: none;          
+    border: 2px solid #333; /* 枠線の太さと色 */
+    padding: 10px;          /* 内側の余白 */
+    margin: 10px 0;        
+    border-radius: 10px;    /* 角を丸くする */
+    width: 300px;
+    margin-left: 450px;
+    margin-top: 150px;
+    height: 300px;
+}
+
+.todo-list a {
+    text-decoration: none; 
+    color: #333;       
+}
+
+.todo-form button {
+    border-radius: 100px;
+    width: 200px;
+    padding: 15px;
+    box-sizing: border-box;
+    background: #74a2f9a3;
+    text-decoration: none;
+    text-align: center;
+    margin: 10px 0;
+    border: none;  /* 枠線を消す */
+    outline: none; /* フォーカス時の枠線を消す */
+    cursor: pointer; /* マウスポインタをポインターに変更 */
+}
+
+.todo-form button:hover {
+    background: #689af6f7;
+}

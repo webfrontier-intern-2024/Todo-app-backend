@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+
+        <!-- タスク追加フォーム -->
+        <form action="/add/" method="post" class="todo-form">
+            <input type="text" name="title" placeholder="タイトル" required>
+            <input type="text" name="description" placeholder="詳細">
+            <input type="text" name="tags" placeholder="タグ（カンマ区切り）">
+            <button type="submit">追加</button>
+        </form>
+
+        <!-- タスク一覧の表示 -->
+        <ul class="todo-list">
+            {% if todos %}
+                {% for todo in todos %}
+                    <li>
+                        {{ todo.title }} - タグ: 
+                        {% for tag in todo.tags %}
+                            {{ tag.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>まだタスクがありません。</li>
+            {% endif %}
+        </ul>
+    </div>
+</body>
+</html>
