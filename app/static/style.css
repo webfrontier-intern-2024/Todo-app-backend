@@ -54,3 +54,17 @@ h1 {
 .todo-form button:hover {
     background: #689af6f7;
 }
+
+/* 削除ボタン */
+.delete-btn {
+    color: white;
+    background-color: red;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.delete-btn:hover {
+    background-color: darkred;
+}
