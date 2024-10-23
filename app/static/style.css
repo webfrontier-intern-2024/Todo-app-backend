@@ -26,9 +26,9 @@ h1 {
     padding: 10px;          /* 内側の余白 */
     margin: 10px 0;        
     border-radius: 10px;    /* 角を丸くする */
-    width: 300px;
+    width: 350px;
     margin-left: 450px;
-    margin-top: 150px;
+    margin-top: 100px;
     height: 300px;
 }
 

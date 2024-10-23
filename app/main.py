@@ -17,13 +17,13 @@ def get_connection():
 # アプリケーションのインスタンスを作成
 app = FastAPI()
 
-# 静的ファイルの提供
+
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-# テンプレートの設定
+
 templates = Jinja2Templates(directory="app/templates")
 
-# 仮のタスクデータ
+
 class Todo:
     def __init__(self, title, tags):
         self.title = title
@@ -82,7 +82,7 @@ def add_todo(
         cursor.execute("SELECT * FROM todos")
         rows = cursor.fetchall()
         
-        todos.clear()  # 既存のリストをクリア
+        todos.clear()  
 
         # タスクごとに関連するタグを取得
         for row in rows:
