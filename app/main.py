@@ -2,8 +2,8 @@ from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from .database import get_db  
-from .models import Todo, Tag 
+from app.models import Todo
+from .database import get_db
 from fastapi import Depends
 
 app = FastAPI()
@@ -11,8 +11,6 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 templates = Jinja2Templates(directory="app/templates")
-
-# 初期タスクデータ（データベースから取得するので仮のデータは不要）
 
 @app.get("/")
 def read_root(request: Request, db: Session = Depends(get_db)):
