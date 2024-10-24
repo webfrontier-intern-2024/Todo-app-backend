@@ -4,15 +4,6 @@ from fastapi.templating import Jinja2Templates
 import psycopg2
 import atexit
 
-# データベース接続
-def get_connection():
-    return psycopg2.connect(
-        dbname='todo_db',
-        user='codeserver',
-        password='rH8,KeGa',
-        host='localhost',
-        port='5432'
-    )
 
 # アプリケーションのインスタンスを作成
 app = FastAPI()
