@@ -1,15 +1,12 @@
-from fastapi import FastAPI, Request, Form, HTTPException
+from fastapi import FastAPI, Request, Form, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from app.models import Todo
-from .database import get_db
-from fastapi import Depends
+from database import get_db
 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-
 templates = Jinja2Templates(directory="app/templates")
 
 @app.get("/")
@@ -36,16 +33,19 @@ def add_todo(
 
         # タグの処理
         for tag_name in tags_list:
+            tag_name = tag_name.strip()  # タグ名の前後の空白を削除
             # 既存のタグを確認、なければ新しいタグを作成
             tag = db.query(Tag).filter(Tag.name == tag_name).first()
             if not tag:
                 tag = Tag(name=tag_name)
                 db.add(tag)
-                db.commit()
-                db.refresh(tag)
-            new_todo.tags.append(tag)  # Todoにタグを関連付け
+                db.commit()  # 新しいタグをコミット
+                db.refresh(tag)  # タグの情報を更新
+            
+            # タグをTodoに追加
+            new_todo.tags.append(tag) 
 
-        db.commit()  # コミットして変更を保存
+        db.commit()  # 最後にTodoをコミット
 
     except Exception as e:
         db.rollback()  # エラーが発生した場合はロールバック
