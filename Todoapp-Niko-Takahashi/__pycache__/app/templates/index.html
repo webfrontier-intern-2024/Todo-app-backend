@@ -18,20 +18,7 @@
             <button type="submit">追加</button>
         </form>
 
-        <form method="post" action="/update/{{ todo_id }}">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" value="{{ todo.title }}" required>
-    
-    <label for="description">Description:</label>
-    <textarea id="description" name="description">{{ todo.description }}</textarea>
-    
-    <label for="tags">Tags (comma-separated):</label>
-    <input type="text" id="tags" name="tags" value="{{ ','.join(todo.tags) }}">
-    
-    <button type="submit">Update</button>
-</form>
-
-        <!-- タスク一覧の表示 -->
+        <!-- タスク一覧の表示欄 -->
         <ul class="todo-list">
             {% if todos %}
                 {% for todo in todos %}
@@ -40,21 +27,12 @@
                         {% for tag in todo.tags %}
                             {{ tag.name }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
-                        <form method="post" action="/delete/{{ todo.id }}" onsubmit="return confirmDelete();">
-                            <button type="submit" class="delete-btn">削除</button>
-                        </form>
                     </li>
                 {% endfor %}
             {% else %}
                 <li>まだタスクがありません。</li>
             {% endif %}
         </ul>
-
-        <script>
-            function confirmDelete() {
-                return confirm('本当にこのタスクを削除しますか？');
-            }
-        </script>
     </div>
 </body>
 </html>

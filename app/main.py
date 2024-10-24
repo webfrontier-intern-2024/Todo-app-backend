@@ -17,15 +17,16 @@ def get_connection():
 # アプリケーションのインスタンスを作成
 app = FastAPI()
 
-
+# 静的ファイルの提供
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-
+# テンプレートの設定
 templates = Jinja2Templates(directory="app/templates")
 
-
+# 仮のタスクデータ
 class Todo:
-    def __init__(self, title, tags):
+    def __init__(self, id, title, tags):
+        self.id = id
         self.title = title
         self.tags = [Tag(name) for name in tags]
 
@@ -33,9 +34,10 @@ class Tag:
     def __init__(self, name):
         self.name = name
 
+# 初期タスクデータ
 todos = [
-    Todo("買い物をする", ["家事"]),
-    Todo("レポートを書く", ["勉強", "重要"]),
+    Todo(1, "買い物をする", ["家事"]),
+    Todo(2, "レポートを書く", ["勉強", "重要"]),
 ]
 
 @app.get("/")
@@ -54,14 +56,14 @@ def add_todo(
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        
+
         # タスクをtodosテーブルに追加
         cursor.execute(
             "INSERT INTO todos (title, description) VALUES (%s, %s) RETURNING id",
             (title, description)
         )
         todo_id = cursor.fetchone()[0]  # 追加されたタスクのIDを取得
-        
+
         # タグの処理
         for tag_name in tags_list:
             cursor.execute("SELECT id FROM tags WHERE name = %s", (tag_name,))
@@ -74,15 +76,15 @@ def add_todo(
                 tag_id = cursor.fetchone()[0]
 
             cursor.execute("INSERT INTO todo_tags (todo_id, tag_id) VALUES (%s, %s)", (todo_id, tag_id))
-        
+
         # コミットしてトランザクションを確定
         connection.commit()
 
         # データベースからすべてのタスクを再取得してtodosリストを更新
         cursor.execute("SELECT * FROM todos")
         rows = cursor.fetchall()
-        
-        todos.clear()  
+
+        todos.clear()  # 既存のリストをクリア
 
         # タスクごとに関連するタグを取得
         for row in rows:
@@ -99,7 +101,7 @@ def add_todo(
             tag_names = [tag_row[0] for tag_row in tag_rows]  # タグ名をリストに変換
             
             # タスクを更新
-            todos.append(Todo(title, tag_names))
+            todos.append(Todo(todo_id, title, tag_names))
 
     except Exception as e:
         if connection:
