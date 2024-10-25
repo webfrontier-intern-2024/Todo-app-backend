@@ -23,10 +23,12 @@
             {% if todos %}
                 {% for todo in todos %}
                     <li>
-                        {{ todo.title }} - タグ: 
+                        {{ todo.title }} - タグ:
                         {% for tag in todo.tags %}
                             {{ tag.name }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
+                        <button class="trash" onclick="deleteTodo('{{ todo.title }}', '{{ todo.tags | join(', ') }}')">🗑️</button>
+                        <button class="edit" onclick="editTodo('{{ todo.title }}', '{{ todo.description }}', '{{ todo.tags | join(', ') }}')">📝</button>
                     </li>
                 {% endfor %}
             {% else %}

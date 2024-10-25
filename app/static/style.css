@@ -26,7 +26,7 @@ h1 {
     padding: 10px;          /* 内側の余白 */
     margin: 10px 0;        
     border-radius: 10px;    /* 角を丸くする */
-    width: 350px;
+    width: 400px;
     margin-left: 450px;
     margin-top: 100px;
     height: 300px;
@@ -56,15 +56,8 @@ h1 {
 }
 
 /* 削除ボタン */
-.delete-btn {
-    color: black;
-    background-color: blueviolet;
+.trash, .edit {
+    background-color: #74a2f9a3;
+    border-radius: 4px;
     border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.delete-btn:hover {
-    background-color: darkred;
 }
