@@ -3,8 +3,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from .database import get_db
-from .models import Todo
-from .models import Tag
+from .models import Todo,Tag, DeleteItem
+
 
 app = FastAPI()
 
@@ -54,3 +54,18 @@ def add_todo(
         raise HTTPException(status_code=500, detail=str(e))  # エラーハンドリング
 
     return {"message": "リストが追加されました"}
+
+# 削除エンドポイント
+@app.delete("/todos/{todo_id}", response_model=DeleteItem)
+def delete_todo(todo_id: int, db: Session = Depends(get_db)):
+    # データベースから指定されたIDのTodoアイテムを取得
+    todo_item = db.query(DeleteItem).filter(DeleteItem.id == todo_id).first()
+    
+    if todo_item is None:
+        raise HTTPException(status_code=404, detail="Todo item not found")
+    
+    # Todoアイテムを削除
+    db.delete(todo_item)
+    db.commit()
+    
+    return todo_item
