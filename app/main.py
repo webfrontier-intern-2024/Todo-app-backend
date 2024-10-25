@@ -2,7 +2,9 @@ from fastapi import FastAPI, Request, Form, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from database import get_db
+from .database import get_db
+from .models import Todo
+from .models import Tag
 
 app = FastAPI()
 
@@ -29,11 +31,11 @@ def add_todo(
         new_todo = Todo(title=title, description=description)
         db.add(new_todo)
         db.commit()
-        db.refresh(new_todo)  # 追加したTodoのIDを取得
+        db.refresh(new_todo) 
 
         # タグの処理
         for tag_name in tags_list:
-            tag_name = tag_name.strip()  # タグ名の前後の空白を削除
+            tag_name = tag_name.strip()  
             # 既存のタグを確認、なければ新しいタグを作成
             tag = db.query(Tag).filter(Tag.name == tag_name).first()
             if not tag:
