@@ -27,14 +27,30 @@
                         {% for tag in todo.tags %}
                             {{ tag.name }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
-                        <button class="trash" onclick="deleteTodo('{{ todo.title }}', '{{ todo.tags | join(', ') }}')">🗑️</button>
-                        <button class="edit" onclick="editTodo('{{ todo.title }}', '{{ todo.description }}', '{{ todo.tags | join(', ') }}')">📝</button>
+                        <!-- todo.idを削除関数に渡す -->
+                        <button class="trash" onclick="deleteTodo({{ todo.id }})">🗑️</button>
+                        <button class="edit" onclick="editTodo('{{ todo.id }}', '{{ todo.title }}', '{{ todo.description }}', '{{ todo.tags | join(', ') }}')">📝</button>
                     </li>
                 {% endfor %}
             {% else %}
                 <li>まだタスクがありません。</li>
             {% endif %}
         </ul>
+        
+        <script>
+            function deleteTodo(id) {
+                fetch(`/todos/${id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();  // タスクが削除されたらページをリロード
+                    } else {
+                        console.error('削除に失敗しました');
+                    }
+                });
+            }
+        </script>
     </div>
 </body>
 </html>

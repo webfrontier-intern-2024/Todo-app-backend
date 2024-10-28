@@ -3,8 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from .database import get_db
-from .models import Todo,Tag, DeleteItem
-
+from .models import Todo, Tag
 
 app = FastAPI()
 
@@ -31,11 +30,11 @@ def add_todo(
         new_todo = Todo(title=title, description=description)
         db.add(new_todo)
         db.commit()
-        db.refresh(new_todo) 
+        db.refresh(new_todo)
 
         # タグの処理
         for tag_name in tags_list:
-            tag_name = tag_name.strip()  
+            tag_name = tag_name.strip()
             # 既存のタグを確認、なければ新しいタグを作成
             tag = db.query(Tag).filter(Tag.name == tag_name).first()
             if not tag:
@@ -45,7 +44,7 @@ def add_todo(
                 db.refresh(tag)  # タグの情報を更新
             
             # タグをTodoに追加
-            new_todo.tags.append(tag) 
+            new_todo.tags.append(tag)
 
         db.commit()  # 最後にTodoをコミット
 
@@ -55,17 +54,15 @@ def add_todo(
 
     return {"message": "リストが追加されました"}
 
-# 削除エンドポイント
-@app.delete("/todos/{todo_id}", response_model=DeleteItem)
+@app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int, db: Session = Depends(get_db)):
-    # データベースから指定されたIDのTodoアイテムを取得
-    todo_item = db.query(DeleteItem).filter(DeleteItem.id == todo_id).first()
-    
-    if todo_item is None:
+    # 削除対象のTodoアイテムを検索
+    todo_item = db.query(Todo).filter(Todo.id == todo_id).first()
+
+    if not todo_item:
         raise HTTPException(status_code=404, detail="Todo item not found")
-    
-    # Todoアイテムを削除
+
     db.delete(todo_item)
     db.commit()
-    
-    return todo_item
+
+    return {"message": "タスクが削除されました"}
