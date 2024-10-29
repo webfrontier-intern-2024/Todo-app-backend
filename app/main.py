@@ -73,9 +73,23 @@ def update_todo(todo_id: int, todo_update: TodoUpdate, db: Session = Depends(get
     if todo is None:
         raise HTTPException(status_code=404, detail="Todo not found")
 
+    # Todoの属性を更新
     todo.title = todo_update.title
     todo.description = todo_update.description
-    todo.datetime = todo_update.datetime  # datetimeの更新を追加
+    todo.datetime = todo_update.datetime
+
+    # タグの更新処理
+    todo.tags.clear()  # 既存のタグをクリア
+    tags_list = todo_update.tags.split(",") if todo_update.tags else []  # 新しいタグリストを取得
+    for tag_name in tags_list:
+        tag_name = tag_name.strip()
+        tag = db.query(Tag).filter(Tag.name == tag_name).first()
+        if not tag:
+            tag = Tag(name=tag_name)
+            db.add(tag)
+            db.commit()  
+            db.refresh(tag)
+        todo.tags.append(tag)
 
     db.commit()
     db.refresh(todo)  

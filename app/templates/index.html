@@ -52,16 +52,19 @@
                     } else {
                         console.error('削除に失敗しました');
                     }
+                })
+                .catch(error => {
+                    console.error('エラーが発生しました:', error);
                 });
             }
 
             function editTodo(id, title, description, tags, datetime) {
                 const newTitle = prompt("新しいタイトルを入力してください:", title);
                 const newDescription = prompt("新しい説明を入力してください:", description);
-                const newTags = prompt("新しいタグを入力してください:", tags);
+                const newTags = prompt("新しいタグをカンマ区切りで入力してください:", tags);
                 const newDatetime = prompt("新しい締切日を入力してください (YYYY-MM-DD):", datetime);
             
-                if (newTitle !== null && newDescription !== null && newTags !== null && newDatetime !== null) {
+                if (newTitle !== null && newDescription !== null && newTags !== null) {
                     fetch(`/todos/${id}`, {
                         method: 'PUT',
                         headers: {
@@ -70,8 +73,8 @@
                         body: JSON.stringify({
                             title: newTitle,
                             description: newDescription,
-                            tags: newTags.split(',').map(tag => tag.trim()),
-                            datetime: newDatetime 
+                            datetime: newDatetime || null,
+                            tags: newTags // カンマ区切りのタグをそのまま送信
                         }),
                     })
                     .then(response => {
@@ -81,7 +84,6 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log('Todoが更新されました:', data);
                         location.reload();  
                     })
                     .catch(error => {
