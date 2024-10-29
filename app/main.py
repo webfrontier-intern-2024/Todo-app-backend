@@ -20,13 +20,12 @@ def read_root(request: Request, db: Session = Depends(get_db)):
 def add_todo(
     title: str = Form(...),
     description: str = Form(None),
-    tags: str = Form(None),  # カンマ区切りでタグを入力
-    db: Session = Depends(get_db)  # データベースセッションを取得
+    tags: str = Form(None),  
+    db: Session = Depends(get_db)  
 ):
-    tags_list = tags.split(",") if tags else []  # カンマ区切りのタグをリストに変換
+    tags_list = tags.split(",") if tags else []  
 
     try:
-        # 新しいTodoをデータベースに追加
         new_todo = Todo(title=title, description=description)
         db.add(new_todo)
         db.commit()
@@ -35,28 +34,25 @@ def add_todo(
         # タグの処理
         for tag_name in tags_list:
             tag_name = tag_name.strip()
-            # 既存のタグを確認、なければ新しいタグを作成
             tag = db.query(Tag).filter(Tag.name == tag_name).first()
             if not tag:
                 tag = Tag(name=tag_name)
                 db.add(tag)
-                db.commit()  # 新しいタグをコミット
-                db.refresh(tag)  # タグの情報を更新
+                db.commit()  
+                db.refresh(tag)  
             
-            # タグをTodoに追加
             new_todo.tags.append(tag)
 
-        db.commit()  # 最後にTodoをコミット
+        db.commit()  
 
     except Exception as e:
         db.rollback()  # エラーが発生した場合はロールバック
-        raise HTTPException(status_code=500, detail=str(e))  # エラーハンドリング
+        raise HTTPException(status_code=500, detail=str(e))  
 
     return {"message": "リストが追加されました"}
 
 @app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int, db: Session = Depends(get_db)):
-    # 削除対象のTodoアイテムを検索
     todo_item = db.query(Todo).filter(Todo.id == todo_id).first()
 
     if not todo_item:
@@ -66,3 +62,4 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "タスクが削除されました"}
+
