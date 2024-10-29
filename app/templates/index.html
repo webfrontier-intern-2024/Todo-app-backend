@@ -50,6 +50,40 @@
                     }
                 });
             }
+
+            function editTodo(id, title, description, tags) {
+                const newTitle = prompt("新しいタイトルを入力してください:", title);
+                const newDescription = prompt("新しい説明を入力してください:", description);
+                const newTags = prompt("新しいタグをカンマ区切りで入力してください:", tags);
+            
+                if (newTitle !== null && newDescription !== null && newTags !== null) {
+                    // APIリクエストの送信
+                    fetch(`/todos/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            title: newTitle,
+                            description: newDescription,
+                            tags: newTags.split(',').map(tag => tag.trim()),
+                        }),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('ネットワークエラー');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Todoが更新されました:', data);
+                        location.reload();  
+                    })
+                    .catch(error => {
+                        console.error('エラーが発生しました:', error);
+                    });
+                }
+            }
         </script>
     </div>
 </body>

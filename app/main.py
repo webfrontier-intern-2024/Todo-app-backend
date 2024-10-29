@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from .database import get_db
 from .models import Todo, Tag
+from .schemas import TodoUpdate
 
 app = FastAPI()
 
@@ -63,3 +64,17 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
 
     return {"message": "タスクが削除されました"}
 
+@app.put("/todos/{todo_id}")
+def update_todo(todo_id: int, todo_update: TodoUpdate, db: Session = Depends(get_db)):
+    todo = db.query(Todo).filter(Todo.id == todo_id).first()
+    
+    if todo is None:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    # 更新内容を適用
+    todo.title = todo_update.title
+    todo.description = todo_update.description
+
+    db.commit()
+    db.refresh(todo)  
+    return todo
