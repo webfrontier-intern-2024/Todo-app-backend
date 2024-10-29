@@ -15,21 +15,21 @@ h1 {
     height: 50px;
     border-radius: 10px;
     outline: none;
-    margin-right: 10px; /* ボタンとの間隔を設定 */
-    flex: 1; /* 入力フィールドが残りのスペースを埋める */
+    margin-right: 10px; 
+    flex: 1; 
 }
 
 .todo-list {
     text-align: center;
     list-style: none;          
-    border: 2px solid #333; /* 枠線の太さと色 */
-    padding: 10px;          /* 内側の余白 */
+    border: 2px solid #333; 
+    padding: 10px;          /* 内側 */
     margin: 10px 0;        
-    border-radius: 10px;    /* 角を丸くする */
-    width: 400px;
+    border-radius: 10px;    
+    width: 450px;
     margin-left: 450px;
     margin-top: 100px;
-    height: 300px;
+    height: 350px;
 }
 
 .todo-list a {
@@ -46,9 +46,9 @@ h1 {
     text-decoration: none;
     text-align: center;
     margin: 10px 0;
-    border: none;  /* 枠線を消す */
-    outline: none; /* フォーカス時の枠線を消す */
-    cursor: pointer; /* マウスポインタをポインターに変更 */
+    border: none;  
+    outline: none; 
+    cursor: pointer; 
 }
 
 .todo-form button:hover {

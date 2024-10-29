@@ -25,9 +25,8 @@
                     <li>
                         {{ todo.title }} - 期限: {{ todo.deadline }} - タグ:
                         {% for tag in todo.tags %}
-                        {{ tag.name }}{% if not loop.last %}, {% endif %}
+                            {{ tag.name }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
-                        <!-- todo.idを削除関数に渡す -->
                         <button class="trash" onclick="deleteTodo({{ todo.id }})">🗑️</button>
                         <button class="edit" onclick="editTodo('{{ todo.id }}', '{{ todo.title }}', '{{ todo.deadline }}', '{{ todo.tags | join(', ') }}')">📝</button>
                     </li>

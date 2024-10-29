@@ -10,26 +10,30 @@
     <div class="container">
         <h1>Todo List</h1>
 
-        <!-- タスク追加フォーム -->
         <form action="/add/" method="post" class="todo-form">
             <input type="text" name="title" placeholder="タイトル" required>
             <input type="text" name="description" placeholder="詳細">
+            <input type="date" name="datetime" required>
             <input type="text" name="tags" placeholder="タグ（カンマ区切り）">
             <button type="submit">追加</button>
         </form>
 
-        <!-- タスク一覧の表示 -->
         <ul class="todo-list">
             {% if todos %}
                 {% for todo in todos %}
                     <li>
-                        {{ todo.title }} - タグ:
+                        {{ todo.title }} - 期限: 
+                        {% if todo.datetime %}
+                            {{ todo.datetime.strftime('%Y-%m-%d') }} 
+                        {% else %}
+                            未設定
+                        {% endif %}
+                        - タグ:
                         {% for tag in todo.tags %}
                             {{ tag.name }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
-                        <!-- todo.idを削除関数に渡す -->
                         <button class="trash" onclick="deleteTodo({{ todo.id }})">🗑️</button>
-                        <button class="edit" onclick="editTodo('{{ todo.id }}', '{{ todo.title }}', '{{ todo.description }}', '{{ todo.tags | join(', ') }}')">📝</button>
+                        <button class="edit" onclick="editTodo('{{ todo.id }}', '{{ todo.title }}', '{{ todo.description }}', '{{ todo.tags | join(', ') }}', '{{ todo.datetime.strftime('%Y-%m-%d') if todo.datetime else '' }}')">📝</button>
                     </li>
                 {% endfor %}
             {% else %}
@@ -44,20 +48,20 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        location.reload();  // タスクが削除されたらページをリロード
+                        location.reload();  
                     } else {
                         console.error('削除に失敗しました');
                     }
                 });
             }
 
-            function editTodo(id, title, description, tags) {
+            function editTodo(id, title, description, tags, datetime) {
                 const newTitle = prompt("新しいタイトルを入力してください:", title);
                 const newDescription = prompt("新しい説明を入力してください:", description);
-                const newTags = prompt("新しいタグをカンマ区切りで入力してください:", tags);
+                const newTags = prompt("新しいタグを入力してください:", tags);
+                const newDatetime = prompt("新しい締切日を入力してください (YYYY-MM-DD):", datetime);
             
-                if (newTitle !== null && newDescription !== null && newTags !== null) {
-                    // APIリクエストの送信
+                if (newTitle !== null && newDescription !== null && newTags !== null && newDatetime !== null) {
                     fetch(`/todos/${id}`, {
                         method: 'PUT',
                         headers: {
@@ -67,6 +71,7 @@
                             title: newTitle,
                             description: newDescription,
                             tags: newTags.split(',').map(tag => tag.trim()),
+                            datetime: newDatetime 
                         }),
                     })
                     .then(response => {
