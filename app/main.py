@@ -90,7 +90,6 @@ def update_todo(todo_id: int, todo_update: TodoUpdate, db: Session = Depends(get
             db.commit()  
             db.refresh(tag)
         todo.tags.append(tag)
-
     db.commit()
     db.refresh(todo)  
     return todo
