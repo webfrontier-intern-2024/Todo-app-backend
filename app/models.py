@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -17,6 +17,7 @@ class Todo(Base):
     title = Column(String, index=True)
     description = Column(String, nullable=True)
     datetime = Column(Date, nullable=False)
+    completed = Column(Boolean, default=False)
 
     # リレーションシップの定義
     tags = relationship('Tag', secondary='todo_tags', back_populates='todos')

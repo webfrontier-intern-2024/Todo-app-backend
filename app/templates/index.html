@@ -22,16 +22,23 @@
             {% if todos %}
                 {% for todo in todos %}
                     <li>
+                        <form action="/toggle_complete/{{ todo.id }}" method="post" style="display: inline;">
+                            <input type="checkbox" name="completed" onchange="this.form.submit()" {% if todo.completed %}checked{% endif %}>
+                        </form>
                         {{ todo.title }} - 期限: 
                         {% if todo.datetime %}
                             {{ todo.datetime.strftime('%Y-%m-%d') }} 
                         {% else %}
                             未設定
-                        {% endif %}
+                        {% endif %} 
                         - タグ:
-                        {% for tag in todo.tags %}
-                            {{ tag.name }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
+                        {% if todo.tags %}
+                            {% for tag in todo.tags %}
+                                {{ tag.name }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            なし
+                        {% endif %}
                         <button class="trash" onclick="deleteTodo({{ todo.id }})">🗑️</button>
                         <button class="edit" onclick="editTodo('{{ todo.id }}', '{{ todo.title }}', '{{ todo.description }}', '{{ todo.tags | join(', ') }}', '{{ todo.datetime.strftime('%Y-%m-%d') if todo.datetime else '' }}')">📝</button>
                     </li>
@@ -40,6 +47,7 @@
                 <li>まだタスクがありません。</li>
             {% endif %}
         </ul>
+        
         
         <script>
             function deleteTodo(id) {

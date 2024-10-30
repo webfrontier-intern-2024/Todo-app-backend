@@ -7,6 +7,7 @@ from .database import get_db
 from .models import Todo, Tag
 from .schemas import TodoUpdate
 from datetime import date
+from fastapi.responses import RedirectResponse
 
 app = FastAPI()
 
@@ -93,3 +94,14 @@ def update_todo(todo_id: int, todo_update: TodoUpdate, db: Session = Depends(get
     db.commit()
     db.refresh(todo)  
     return todo
+
+@app.post("/toggle_complete/{todo_id}")
+async def toggle_complete(todo_id: int, db: Session = Depends(get_db)):
+    todo = db.query(Todo).filter(Todo.id == todo_id).first()
+    if not todo:
+        raise HTTPException(status_code=404, detail="Todo item not found")
+    
+    todo.completed = not todo.completed  # 完了状態の切り替え
+    db.commit()
+    
+    return RedirectResponse(url="/", status_code=303)   
